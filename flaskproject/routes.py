@@ -1,6 +1,6 @@
 from flask import render_template, url_for, flash, redirect, request
 from flaskproject import app, bcrypt, db
-from flaskproject.forms import LoginForm, RegistrationForm
+from flaskproject.forms import LoginForm, RegistrationForm, BookingForm
 from flaskproject.models import User
 from flask_login import login_user, current_user, logout_user, login_required
 
@@ -52,3 +52,10 @@ def logout():
 @login_required
 def account():
     return render_template('profile.html', title='Profil użytkownika')
+
+@app.route("/book", methods=["GET", "POST"])
+def book():
+	if current_user.is_authenticated==False:
+		return redirect(url_for('home'))
+	form = BookingForm()
+	return render_template('book.html', title='Rezerwacja wizyty', form=form)

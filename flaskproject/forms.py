@@ -1,7 +1,8 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, IntegerField, SubmitField
+from wtforms import StringField, PasswordField, IntegerField, SubmitField, SelectField, DateField, SelectMultipleField, widgets
 from wtforms.validators import DataRequired, Length, Email, EqualTo
-from flaskproject.models import User
+import datetime
+from flaskproject.models import User, Doctor
 
 
 class RegistrationForm(FlaskForm):
@@ -26,4 +27,15 @@ class LoginForm(FlaskForm):
 	password = PasswordField("Hasło", validators=[DataRequired()])
 	submit = SubmitField("Zaloguj")
 
+class DoctorChoiceIter(object):
+	def __iter__(self):
+		doctors = Doctor.query.all()
+		choice = [(doctor.id, doctor.name) for doctor in doctors]
+		for element in choice:
+			yield element
+
+class BookingForm(FlaskForm):
+	doctor=SelectField('Wybierz lekarza',coerce=int,choices=DoctorChoiceIter())
+	date=DateField('Wybierz date', format="%m/%d/%Y",validators=[DataRequired()])
+	submit=SubmitField('Zarezerwuj')
 
