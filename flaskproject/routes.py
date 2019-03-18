@@ -7,7 +7,7 @@ from flask_login import login_user, current_user, logout_user, login_required
 
 @app.route("/")
 def home():
-    return render_template('home.html', title="Strona Główna")
+    return render_template('home.html', title="Przychodnia.pl")
 
 
 @app.route("/login", methods=["GET", "POST"])
