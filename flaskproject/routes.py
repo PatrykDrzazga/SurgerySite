@@ -1,8 +1,9 @@
 from flask import render_template, url_for, flash, redirect, request
 from flaskproject import app, bcrypt, db
 from flaskproject.forms import LoginForm, RegistrationForm, BookingForm
-from flaskproject.models import User
+from flaskproject.models import User, Visit
 from flask_login import login_user, current_user, logout_user, login_required
+from datetime import datetime
 
 
 @app.route("/")
@@ -48,14 +49,27 @@ def logout():
     return redirect(url_for('home'))
 
 
-@app.route("/profile")
+
+@app.route("/profile", methods=["GET", "POST"])
 @login_required
 def account():
-    return render_template('profile.html', title='Profil użytkownika')
+    return render_template('profile.html', title='Profil użytkownika', sen=Visit.query.filter(Visit.bookerId==current_user.id).order_by(Visit.id.desc()).first(),sen1=Visit.query.filter(Visit.bookerId==current_user.id).order_by(Visit.id.desc()).first(),sen2=Visit.query.filter(Visit.bookerId==current_user.id).order_by(Visit.id.desc()).first(),sen3=Visit.query.filter(Visit.bookerId==current_user.id).order_by(Visit.id.desc()).first())
 
 @app.route("/book", methods=["GET", "POST"])
 def book():
 	if current_user.is_authenticated==False:
 		return redirect(url_for('home'))
 	form = BookingForm()
+	if form.validate_on_submit():
+		#print(current_user.id)
+		#print(form.doctor.data)
+		#print(form.date.data)
+		#print(form.time.data)
+		
+		visit = Visit(bookerId=current_user.id, doctorId=form.doctor.data, date=str(form.date.data), startTime=str(form.time.data))
+		db.session.add(visit)
+		db.session.commit()
 	return render_template('book.html', title='Rezerwacja wizyty', form=form)
+	
+
+	

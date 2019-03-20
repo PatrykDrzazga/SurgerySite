@@ -1,5 +1,6 @@
 {% extends "layout.html" %}
 {% block content %}
+<br/>
 	<form method="POST" action="">
 		{{ form.hidden_tag() }}
 		<fieldset class="form-group">
@@ -11,6 +12,10 @@
 				{{ form.date.label(class="form-control-label") }}
 				{{ form.date(class="dtpick") }}
 				
+			</div>
+			<div class="form-group">
+				{{ form.time.label(class="form-control-label") }}
+				{{ form.time() }}
 			</div>
 			<div class="form-group">
 				{{ form.submit(class="btn btn-outline-info") }}

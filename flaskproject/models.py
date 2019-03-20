@@ -23,8 +23,8 @@ class Visit(db.Model):
 	id = db.Column(db.Integer, primary_key=True, nullable=False, unique=True)
 	bookerId = db.Column(db.Integer, db.ForeignKey('user.id'))
 	doctorId = db.Column(db.Integer, db.ForeignKey('doctor.id')) 
-	date = db.Column(db.DateTime, nullable=False)
-	startTime = db.Column(db.Integer, nullable=False)
+	date = db.Column(db.String(20), nullable=False)
+	startTime = db.Column(db.String(20), nullable=False)
 
 	def __repr__(self):
 		return f"Visit('{self.id}', '{self.date}', '{self.startTime}')"
