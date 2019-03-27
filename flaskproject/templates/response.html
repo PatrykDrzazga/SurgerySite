@@ -1,0 +1,5 @@
+{%- for element in reservedHoursArray %}
+{%- set p = element|int %}
+{%- set z = p + 1 %}
+{{- element + "," }}
+{%- endfor %}

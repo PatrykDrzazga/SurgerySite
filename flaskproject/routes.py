@@ -1,10 +1,14 @@
-from flask import render_template, url_for, flash, redirect, request
+from flask import render_template, url_for, flash, redirect, request, Response
 from flaskproject import app, bcrypt, db
-from flaskproject.forms import LoginForm, RegistrationForm, BookingForm
-from flaskproject.models import User, Visit
+from flaskproject.forms import LoginForm, RegistrationForm, BookingForm, EditProfileForm
+from flaskproject.models import User, Visit, Doctor
 from flask_login import login_user, current_user, logout_user, login_required
 from datetime import datetime
+import random, json
+from flask import request, jsonify
+import sys
 
+reservedHoursArray = []
 
 @app.route("/")
 def home():
@@ -37,10 +41,9 @@ def register():
 		user = User(name=form.name.data, surname=form.surname.data, email=form.email.data, password=hashed_password, phoneNumber=form.phoneNumber.data)
 		db.session.add(user)
 		db.session.commit()
-		flash('Twoje konto zostało utworzone pomyślnie!', 'succes')
+		flash('Twoje konto zostało utworzone pomyślnie!', 'success')
 		return redirect(url_for('login'))
 	return render_template('register.html', title="Rejestracja", form=form)
-
 
 
 @app.route("/logout")
@@ -49,11 +52,15 @@ def logout():
     return redirect(url_for('home'))
 
 
-
 @app.route("/profile", methods=["GET", "POST"])
 @login_required
 def account():
-    return render_template('profile.html', title='Profil użytkownika', sen=Visit.query.filter(Visit.bookerId==current_user.id).order_by(Visit.id.desc()).first(),sen1=Visit.query.filter(Visit.bookerId==current_user.id).order_by(Visit.id.desc()).first(),sen2=Visit.query.filter(Visit.bookerId==current_user.id).order_by(Visit.id.desc()).first(),sen3=Visit.query.filter(Visit.bookerId==current_user.id).order_by(Visit.id.desc()).first())
+	date = datetime.now().strftime("%Y-%m-%d")
+	bookedVisits = Visit.query.filter(Visit.bookerId==current_user.id, Visit.date > date).all()
+	visitsHistory = Visit.query.filter(Visit.bookerId==current_user.id, Visit.date < date).all()
+	doctor = Doctor.query.filter(Doctor.id==Visit.doctorId).all()
+	return render_template('profile.html', title='Profil użytkownika', bookedVisits=bookedVisits, visitsHistory=visitsHistory, doctor=doctor)
+
 
 @app.route("/book", methods=["GET", "POST"])
 def book():
@@ -61,15 +68,43 @@ def book():
 		return redirect(url_for('home'))
 	form = BookingForm()
 	if form.validate_on_submit():
-		#print(current_user.id)
-		#print(form.doctor.data)
-		#print(form.date.data)
-		#print(form.time.data)
-		
 		visit = Visit(bookerId=current_user.id, doctorId=form.doctor.data, date=str(form.date.data), startTime=str(form.time.data))
 		db.session.add(visit)
 		db.session.commit()
 	return render_template('book.html', title='Rezerwacja wizyty', form=form)
-	
+
+
+
+@app.route('/receiver', methods = ["POST"])
+def worker():
+	data = request.get_json()
+	value = data.get('data')
+	reservedHours = Visit.query.filter(Visit.date==value).all()
+	reservedHoursArray.clear()
+	for element in reservedHours:
+		#reservedHoursArray.append("[" + "'" + element.startTime[0:2] + "'" + "," + "'" + str(int(element.startTime[0:2])+1)  + "'" + "]")
+		reservedHoursArray.append(element.startTime[0:2])
+	print(reservedHoursArray)
+	return  value
+
+
+@app.route('/get_data', methods = ["POST"])
+def get_data():
+	return jsonify({'data': render_template('response.html', reservedHoursArray=reservedHoursArray)})
+
+@app.route("/edit_profile", methods=["GET", "POST"])
+def editProfile():
+	data = User.query.filter(User.id==current_user.id).first()
+	if current_user.is_authenticated==False:
+		return redirect(url_for('home'))
+	form = EditProfileForm()
+	if form.validate_on_submit():
+		data.name=form.name.data
+		data.surname=form.surname.data
+		data.email=form.email.data
+		data.phoneNumber=form.phoneNumber.data
+		db.session.commit()
+		flash(u'Dane zostały zaktualizowane!', 'success')
+	return render_template('edit_profile.html', title='Edycja profilu', form=form, data=data)
 
 	

@@ -42,6 +42,13 @@ class BookingForm(FlaskForm):
 	date=DateField('Wybierz date', format="%m/%d/%Y")
 	time=TimeField('Wybierz godzine')
 	submit=SubmitField('Zarezerwuj')
+
+class EditProfileForm(FlaskForm):
+	name = StringField("Imię",validators=[DataRequired()])
+	surname = StringField("Nazwisko", validators=[DataRequired()])
+	email = StringField("Email", validators=[DataRequired(), Email()])
+	phoneNumber = IntegerField("Numer telefonu", validators=[DataRequired()])
+	submit = SubmitField("Edytuj dane")
 	
 	
 

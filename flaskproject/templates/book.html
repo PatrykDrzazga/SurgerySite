@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 {% block content %}
-<br/>
+	<br/>
 	<form method="POST" action="">
 		{{ form.hidden_tag() }}
 		<fieldset class="form-group">
@@ -11,15 +11,86 @@
 			<div class="form-group">
 				{{ form.date.label(class="form-control-label") }}
 				{{ form.date(class="dtpick") }}
+				<p id="test"></p>
+				<script type="text/javascript">
+					var dateToday = new Date();
+					$( ".dtpick" ).datepicker({
+						minDate: dateToday,
+						dateFormat: "yy-mm-dd",
+						onSelect: function(date) {
+					
+							document.getElementById("test").innerHTML = date;
+				$.ajax({
+				type : "POST",
+				url : "/receiver",
+				contentType : "application/json",
+				data : JSON.stringify({"data": date}),
+				dataType: "json",
+				async: false,
+				success: function(data) {
+				alert("success: " + data);
+				}
+				});
+				get_d();
+				setTimeout(z, 1000);
+				}
+					});
 				
+				function get_d(){
+							$.ajax({
+				type : "POST",
+				url : "/get_data",
+				success: function(resp) {
+				
+				$('div#response').append(resp.data);
+				}
+				});
+						}
+						function z(){
+					
+				var a = document.getElementById('response').innerHTML;
+				var b = String(a);
+				var str = String(a);
+				var oldArray = str.split(',');
+				var newArray = [];
+				while(oldArray.length){
+				let start = 0;
+				let end = 2;
+				newArray.push(oldArray.slice(start, end));
+				oldArray.splice(start, end);
+				}
+				
+				console.log(newArray);
+				var arr = newArray;
+				console.log(b);
+				$('#time').timepicker({
+				'showDuration': false,
+				'timeFormat': 'H:i',
+				'step': '30',
+				'minTime': '9:00',
+				'maxTime': '16:00',
+				});
+///$('#time').timepicker('remove').timepicker({'disableTimeRanges': arr });
+
+				};
+
+
+					
+				</script>
+				<div id="response" style="visibility: hidden;"></div>
 			</div>
 			<div class="form-group">
 				{{ form.time.label(class="form-control-label") }}
-				{{ form.time() }}
+				<input type="text" id="time" autocomplete="off"/>
+				
 			</div>
 			<div class="form-group">
 				{{ form.submit(class="btn btn-outline-info") }}
 			</div>
+			<script type="text/javascript">
+			
+			
+			</script>
 		</fieldset>
 	</form>
 {% endblock content %}

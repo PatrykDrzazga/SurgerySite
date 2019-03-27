@@ -1,0 +1,34 @@
+{% extends "layout.html" %}
+{% block content %}
+	<div class="col-md-12">
+		<div class="card">
+			<div class="card-header">
+				<center><h3>Edytuj profil</h3></center>
+			</div>
+			<form method="POST" action="">
+				{{ form.hidden_tag() }}
+				<fieldset class="form-group">
+					<div class="form-group">
+						{{ form.name.label(class="form-control-label")}}
+						{{ form.name(class="form-control form-control-lg", value=data.name) }}
+					</div>
+					<div class="form-group">
+						{{ form.surname.label(class="form-control-label")}}
+						{{ form.surname(class="form-control form-control-lg", value=data.surname) }}
+					</div>
+					<div class="form-group">
+						{{ form.email.label(class="form-control-label")}}
+						{{ form.email(class="form-control form-control-lg", value=data.email) }}
+					</div>
+					<div class="form-group">
+						{{ form.phoneNumber.label(class="form-control-label")}}
+						{{ form.phoneNumber(class="form-control form-control-lg", value=data.phoneNumber) }}
+					</div>
+				</fieldset>
+				<div class="form-group">
+					<center>{{ form.submit(class="btn btn-outline-info") }}</center>
+				</div>
+			</form>
+		</div>
+	</div>
+{% endblock content %}
