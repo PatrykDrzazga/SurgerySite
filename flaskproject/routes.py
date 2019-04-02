@@ -55,11 +55,13 @@ def logout():
 @app.route("/profile", methods=["GET", "POST"])
 @login_required
 def account():
+	if current_user.isDoctor()==True:
+		return redirect(url_for('doctor'))
 	date = datetime.now().strftime("%Y-%m-%d")
 	bookedVisits = Visit.query.filter(Visit.bookerId==current_user.id, Visit.date > date).all()
 	visitsHistory = Visit.query.filter(Visit.bookerId==current_user.id, Visit.date < date).all()
 	doctor = Doctor.query.filter(Doctor.id==Visit.doctorId).all()
-	return render_template('profile.html', title='Profil użytkownika', bookedVisits=bookedVisits, visitsHistory=visitsHistory, doctor=doctor)
+	return render_template('profile.html', title='Profil pacjenta', bookedVisits=bookedVisits, visitsHistory=visitsHistory, doctor=doctor)
 
 
 @app.route("/book", methods=["GET", "POST"])
@@ -122,5 +124,10 @@ def editProfile():
 		db.session.commit()
 		flash(u'Dane zostały zaktualizowane!', 'success')
 	return render_template('edit_profile.html', title='Edycja profilu', form=form, data=data)
+
+@app.route("/doctor", methods=["GET", "POST"])
+def doctor():
+	return render_template('doctor.html', title='Panel doktora')
+
 
 	

@@ -14,6 +14,13 @@ class User(db.Model, UserMixin):
 	email = db.Column(db.String(120), unique=True, nullable=False)
 	password = db.Column(db.String(60), nullable=False)
 	phoneNumber = db.Column(db.Integer, nullable=False)
+	userType = db.Column(db.String(20), default = 'user')
+
+	def isDoctor(self):
+         if self.userType == 'doctor':
+             return True
+         else:
+             return False
 
 	def __repr__(self):
 		return f"User('{self.email}', '{self.name}', '{self.surname}')"

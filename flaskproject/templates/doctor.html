@@ -1,0 +1,48 @@
+{% extends "layout.html" %}
+{% block content %}
+	<div class="col-md-12">
+		<div class="card">
+			<div class="card-header">
+				<center><h3>Panel doktora</h3></center>
+			</div>
+			<div class="card-body">
+				<div class="row">
+					<div class="col-lg-6 col-sm-12">
+						<h5 class="card-title">Dane pracownika</h5>
+						<div class="card mb-3" style="max-width: 540px;">
+							<div class="row no-gutters">
+								<div class="col-md-4">
+									<img src="https://www.kwsme.com/wp-content/uploads/2016/06/login-user-icon.png" class="img" width="150px" height="150px">
+								</div>
+								<div class="col-md-8">
+									<div class="card-body">
+										<p class="card-text"><b>Imię:</b> {{ current_user.name }}</p>
+										<p class="card-text"><b>Nazwisko:</b> {{ current_user.surname }}</p>
+										<p class="card-text"><b>Adres email:</b> {{ current_user.email }}</p>
+										<p class="card-text"><b>Numer telefonu:</b> {{ current_user.phoneNumber }}</p>
+									</div>
+								</div>
+							</div>
+							<a href="/edit_profile" class="btn btn-secondary">Edytuj dane</a>
+						</div>
+					</div>
+					<div class="col-lg-6 col-sm-12">
+						<h5 class="card-title">Najbliższe wizyty</h5>
+						<div class="card">
+							<div class="card-body">
+								<ul class="list-group list-group-flush">
+									<li class="list-group-item">
+										<b>Pacjent:</b> Dane
+										<b>data:</b> data
+									</li>
+								</ul>
+							</div>
+							<a href="#" class="btn btn-primary">Zobacz wszystkie</a>
+						</div>
+					</div>
+				</div>
+				<center><a href="/logout" class="btn btn-primary">Wyloguj</a></center>
+			</div>
+		</div>
+	</div>
+{% endblock content %}

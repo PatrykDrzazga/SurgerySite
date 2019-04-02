@@ -1,85 +1,83 @@
 {% extends "layout.html" %}
 {% block content %}
-	<div class="row" id="test">
-		<div class="col-md-12">
-			<div class="card">
-				<div class="card-header">
-					<center><h3>Panel pacjenta</h3></center>
-				</div>
-				<div class="card-body">
-					<div class="row">
-						<div class="col-lg-6 col-sm-12">
-							<h5 class="card-title">Dane pacjenta</h5>
-							<div class="card mb-3" style="max-width: 540px;">
-								<div class="row no-gutters">
-									<div class="col-md-4">
-										<img src="https://www.kwsme.com/wp-content/uploads/2016/06/login-user-icon.png" class="img" width="150px" height="150px">
-									</div>
-									<div class="col-md-8">
-										<div class="card-body">
-											<p class="card-text"><b>Imię:</b> {{ current_user.name }}</p>
-											<p class="card-text"><b>Nazwisko:</b> {{ current_user.surname }}</p>
-											<p class="card-text"><b>Adres email:</b> {{ current_user.email }}</p>
-											<p class="card-text"><b>Numer telefonu:</b> {{ current_user.phoneNumber }}</p>
-										</div>
+	<div class="col-md-12">
+		<div class="card">
+			<div class="card-header">
+				<center><h3>Panel pacjenta</h3></center>
+			</div>
+			<div class="card-body">
+				<div class="row">
+					<div class="col-lg-6 col-sm-12">
+						<h5 class="card-title">Dane pacjenta</h5>
+						<div class="card mb-3" style="max-width: 540px;">
+							<div class="row no-gutters">
+								<div class="col-md-4">
+									<img src="https://www.kwsme.com/wp-content/uploads/2016/06/login-user-icon.png" class="img" width="150px" height="150px">
+								</div>
+								<div class="col-md-8">
+									<div class="card-body">
+										<p class="card-text"><b>Imię:</b> {{ current_user.name }}</p>
+										<p class="card-text"><b>Nazwisko:</b> {{ current_user.surname }}</p>
+										<p class="card-text"><b>Adres email:</b> {{ current_user.email }}</p>
+										<p class="card-text"><b>Numer telefonu:</b> {{ current_user.phoneNumber }}</p>
 									</div>
 								</div>
-								<a href="/edit_profile" class="btn btn-secondary">Edytuj dane</a>
 							</div>
-						</div>
-						<div class="col-lg-6 col-sm-12">
-							<h5 class="card-title">Umówione wizyty</h5>
-							<div class="card">
-								<div class="card-body">
-									<ul class="list-group list-group-flush">
-										{% if bookedVisits %}
-											{%for element in bookedVisits%}
-											<li class="list-group-item">
-												<b>Lekarz:</b> {{ doctor[element.doctorId-1].name }} {{ doctor[element.doctorId-1].surname }}
-												<b>data:</b> {{ element.date }} {{ element.startTime }}
-											</li>
-											{%endfor%}
-										{% else %}
-											<li class="list-group-item">Brak umówionych wizyt</li>
-										{% endif %}
-									</ul>
-								</div>
-								<a href="/book" class="btn btn-primary">Zarezerwuj wizyte</a>
-							</div>
+							<a href="/edit_profile" class="btn btn-secondary">Edytuj dane</a>
 						</div>
 					</div>
-					<h5 class="card-title">Historia wizyt</h5>
-					<div class="card">
-						<div class="card-body">
-							<ul class="list-group list-group-flush">
-								{% if visitsHistory|length > 2 %}
-									{%for element in range(0,3)%}
-									<li class="list-group-item">
-										<b>Lekarz:</b> {{ doctor[visitsHistory[element].doctorId-1].name }} {{ doctor[visitsHistory[element].doctorId-1].surname }}
-										<b>data wizyty:</b> {{ visitsHistory[element].date }}
-										<b>godzina:</b> {{ visitsHistory[element].startTime }}
-										<button class="btn btn-primary btn-sm" type="submit">Szczegóły</button>
-									</li>
-									{%endfor%}
-								{% endif %}
-								{% if (visitsHistory|length < 3 and visitsHistory|length > 0)  %}
-									{%for element in visitsHistory%}
-									<li class="list-group-item">
-										<b>Lekarz:</b> {{ doctor[element.doctorId-1].name }} {{ doctor[element.doctorId-1].surname }}
-										<b>data wizyty:</b> {{ element.date }}
-										<b>godzina:</b> {{ element.startTime }}
-										<button class="btn btn-primary btn-sm" type="submit">Szczegóły</button>
-									</li>
-									{%endfor%}
-								{% endif %}
-								{% if visitsHistory|length == 0 %}
-									<li class="list-group-item">Brak umówionych wizyt</li>
-								{% endif %}
-							</ul>
+					<div class="col-lg-6 col-sm-12">
+						<h5 class="card-title">Umówione wizyty</h5>
+						<div class="card">
+							<div class="card-body">
+								<ul class="list-group list-group-flush">
+									{% if bookedVisits %}
+										{%for element in bookedVisits%}
+										<li class="list-group-item">
+											<b>Lekarz:</b> {{ doctor[element.doctorId-1].name }} {{ doctor[element.doctorId-1].surname }}
+											<b>data:</b> {{ element.date }} {{ element.startTime }}
+										</li>
+										{%endfor%}
+									{% else %}
+										<li class="list-group-item">Brak umówionych wizyt</li>
+									{% endif %}
+								</ul>
+							</div>
+							<a href="/book" class="btn btn-primary">Zarezerwuj wizyte</a>
 						</div>
 					</div>
-					<center><a href="/logout" class="btn btn-primary">Wyloguj</a></center>
 				</div>
+				<h5 class="card-title">Historia wizyt</h5>
+				<div class="card">
+					<div class="card-body">
+						<ul class="list-group list-group-flush">
+							{% if visitsHistory|length > 2 %}
+								{%for element in range(0,3)%}
+								<li class="list-group-item">
+									<b>Lekarz:</b> {{ doctor[visitsHistory[element].doctorId-1].name }} {{ doctor[visitsHistory[element].doctorId-1].surname }}
+									<b>data wizyty:</b> {{ visitsHistory[element].date }}
+									<b>godzina:</b> {{ visitsHistory[element].startTime }}
+									<button class="btn btn-primary btn-sm" type="submit">Szczegóły</button>
+								</li>
+								{%endfor%}
+							{% endif %}
+							{% if (visitsHistory|length < 3 and visitsHistory|length > 0)  %}
+								{%for element in visitsHistory%}
+								<li class="list-group-item">
+									<b>Lekarz:</b> {{ doctor[element.doctorId-1].name }} {{ doctor[element.doctorId-1].surname }}
+									<b>data wizyty:</b> {{ element.date }}
+									<b>godzina:</b> {{ element.startTime }}
+									<button class="btn btn-primary btn-sm" type="submit">Szczegóły</button>
+								</li>
+								{%endfor%}
+							{% endif %}
+							{% if visitsHistory|length == 0 %}
+								<li class="list-group-item">Brak umówionych wizyt</li>
+							{% endif %}
+						</ul>
+					</div>
+				</div>
+				<center><a href="/logout" class="btn btn-primary">Wyloguj</a></center>
 			</div>
 		</div>
 	</div>
