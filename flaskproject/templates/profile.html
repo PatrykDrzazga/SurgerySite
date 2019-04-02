@@ -36,8 +36,7 @@
 											{%for element in bookedVisits%}
 											<li class="list-group-item">
 												<b>Lekarz:</b> {{ doctor[element.doctorId-1].name }} {{ doctor[element.doctorId-1].surname }}
-												<b>data:</b> {{ element.date }}
-												<b>godzina:</b> {{ element.startTime }}
+												<b>data:</b> {{ element.date }} {{ element.startTime }}
 											</li>
 											{%endfor%}
 										{% else %}

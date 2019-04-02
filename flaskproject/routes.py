@@ -5,7 +5,7 @@ from flaskproject.models import User, Visit, Doctor
 from flask_login import login_user, current_user, logout_user, login_required
 from datetime import datetime
 import random, json
-from flask import request, jsonify
+from flask import request, jsonify, session
 import sys
 
 reservedHoursArray = []
@@ -67,11 +67,29 @@ def book():
 	if current_user.is_authenticated==False:
 		return redirect(url_for('home'))
 	form = BookingForm()
-	if form.validate_on_submit():
-		visit = Visit(bookerId=current_user.id, doctorId=form.doctor.data, date=str(form.date.data), startTime=str(form.time.data))
-		db.session.add(visit)
-		db.session.commit()
+	if request.method=='POST':
+		if 'sb_button' in request.form:
+			session['choosenDoctor'] = form.doctor.data
+			return redirect(url_for('hours'))
 	return render_template('book.html', title='Rezerwacja wizyty', form=form)
+
+
+@app.route("/hours", methods=["GET", "POST"])
+def hours():
+	if current_user.is_authenticated==False:
+		return redirect(url_for('home'))
+	choosenDate = session.get('choosenDate', None)
+	choosenDoctor = session.get('choosenDoctor', None)
+	my_var = session.get('my_var', None)
+	if request.method=='POST':
+		if 'submit_button' in request.form:
+			user_answer=request.form['choosenHour']
+			visit = Visit(bookerId=current_user.id, doctorId=choosenDoctor, date=str(choosenDate), startTime=str(user_answer)+":00:00")
+			db.session.add(visit)
+			db.session.commit()
+			flash('Twoja wizyta została zarezerwowana pomyślnie!', 'success')
+			return redirect(url_for('home'))
+	return render_template('hours.html', title='Wybór godziny rezerwacji', choosenDate=choosenDate, choosenDoctor=choosenDoctor, my_var=my_var)
 
 
 
@@ -82,15 +100,13 @@ def worker():
 	reservedHours = Visit.query.filter(Visit.date==value).all()
 	reservedHoursArray.clear()
 	for element in reservedHours:
-		#reservedHoursArray.append("[" + "'" + element.startTime[0:2] + "'" + "," + "'" + str(int(element.startTime[0:2])+1)  + "'" + "]")
 		reservedHoursArray.append(element.startTime[0:2])
-	print(reservedHoursArray)
+	reservedHoursArray.sort()
+	session['my_var'] = reservedHoursArray
+	session['choosenDate'] = value
 	return  value
 
 
-@app.route('/get_data', methods = ["POST"])
-def get_data():
-	return jsonify({'data': render_template('response.html', reservedHoursArray=reservedHoursArray)})
 
 @app.route("/edit_profile", methods=["GET", "POST"])
 def editProfile():

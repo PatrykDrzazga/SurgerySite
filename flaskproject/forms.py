@@ -31,17 +31,16 @@ class LoginForm(FlaskForm):
 class DoctorChoiceIter(object):
 	def __iter__(self):
 		doctors = Doctor.query.all()
-		choice = [(doctor.id, doctor.name) for doctor in doctors]
+		choice = [(doctor.id, doctor.name + " " + doctor.surname) for doctor in doctors]
 		for element in choice:
 			yield element
 
 
 
 class BookingForm(FlaskForm):
-	doctor=SelectField('Wybierz lekarza',coerce=int,choices=DoctorChoiceIter())
-	date=DateField('Wybierz date', format="%m/%d/%Y")
-	time=TimeField('Wybierz godzine')
-	submit=SubmitField('Zarezerwuj')
+	doctor=SelectField('Wybierz lekarza: ',coerce=int,choices=DoctorChoiceIter(),validators=[DataRequired()])
+	date=DateField('Wybierz date: ', format="%m/%d/%Y",validators=[DataRequired()])
+	submit=SubmitField('Dalej')
 
 class EditProfileForm(FlaskForm):
 	name = StringField("Imię",validators=[DataRequired()])

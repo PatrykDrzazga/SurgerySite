@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+{% block content %}
+	<br>
+	<div class="col-md-12">
+		<div class="card text-center">
+			<div class="card-header">
+				Rezerwacja wizyty
+			</div>
+			<div class="card-body">
+				<form action="" method="POST">
+					<p>Wybierz godzinę rezerwacji:<p>
+						{% for i in range(9,16) %}
+							{% if (i|string not in my_var)  %}
+								<label class="form-check-label"><input class="form-check-input" type="radio" name="choosenHour" id={{ i }} value={{ i }}>{{ i }}:00</label><br><br>
+							{% endif %}
+						{% endfor %}
+						<input type="submit" name="submit_button" class="btn btn-outline-info" value="Zarezerwuj">
+					</form>
+				</div>
+			</div>
+		</div>
+{% endblock content %}
