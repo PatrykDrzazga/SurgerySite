@@ -19,35 +19,45 @@
 <link rel="stylesheet" href="http://jonthornton.github.io/jquery-timepicker/jquery.timepicker.css">
 <script src="http://jonthornton.github.io/jquery-timepicker/jquery.timepicker.js"></script>
   </head>
-  <body>
+  <body >
     
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-      <a class="navbar-brand" href="#">Przychodnia.pl</a>
+     <!-- <a class="navbar-brand" href="#">Przychodnia.pl</a> -->
+	
+	
+	 
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
       </button>
+	   <a href="/"><img src="https://previews.dropbox.com/p/thumb/AAZ0b-3LtgZHI7v2HyhlDEtLJiv1oDDMurPH1k2LuZZ_teYswYDAwI4x9hCawZmofx7L6k7zKzflMdK5AqoIP51zL5rWroflZtIY5O3bLGX54abhB6UWldWphID9Tinwhz38CaiKgsi_sGyRII--HzZnhqgrLV7Mfoq0hcwdkcJrsi2AOl6wba70TADHUPM7PDMdUPITzvh_Z9G69z3caVdLOy7IwPNtjydZwPckOTUvO7vTUzFLAQ3GgqdYb-iqOJTanFXcfse66iA0sQguiVCVbcMtezbrsjaIoUE6ctSVndsfElrsbrpCvrNuQ_8GXZ__E3kU-F5xkUBeDpjRXIC2/p.jpeg?size_mode=5" height="94px" width="400px">  </a> 
+	   
+	   
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
+		  
           <li class="nav-item">
-            <a class="nav-link" href="/">Strona główna</a>
+            <a class="nav-link" href="/"><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font size="4">Strona główna</font></b></a>
           </li>
+		  
           {% if current_user.is_authenticated %}
             <li class="nav-item">
-              <a class="nav-link" href="/profile">Profil</a>
+              <a class="nav-link" href="/profile"><b>&nbsp;&nbsp;<font size="4">Profil</font></b></a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="/logout">Wyloguj</a>
+              <a class="nav-link" href="/logout"><b>&nbsp;&nbsp;<font size="4">Wyloguj</font></b></a>
             {% else %}
               <li class="nav-item">
-                <a class="nav-link" href="/login">Logowanie</a>
+                <a class="nav-link" href="/login"><b>&nbsp;&nbsp;<font size="4">Logowanie</font></b></a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="/register">Rejestracja</a>
+                <a class="nav-link" href="/register"><b>&nbsp;&nbsp;<font size="4">Rejestracja</font></b></a>
               {% endif %}
+			  
             </li>
           </ul>
         </div>
       </nav>
+	  
       <div class="container">
         <div class="row">
           <div class="col-md-12">
@@ -61,7 +71,7 @@
             {% endif %}
           {% endwith %}
           {% block body %}{% endblock %}
-          <br>
+          
           {% block content %}
           {% endblock content %}
         </div>
