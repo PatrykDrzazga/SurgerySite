@@ -30,7 +30,7 @@ class LoginForm(FlaskForm):
 
 class DoctorChoiceIter(object):
 	def __iter__(self):
-		doctors = Doctor.query.all()
+		doctors = User.query.filter(User.userType=='doctor').all()
 		choice = [(doctor.id, doctor.name + " " + doctor.surname) for doctor in doctors]
 		for element in choice:
 			yield element

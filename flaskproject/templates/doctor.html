@@ -27,17 +27,25 @@
 						</div>
 					</div>
 					<div class="col-lg-6 col-sm-12">
-						<h5 class="card-title">Najbliższe wizyty</h5>
+						<h5 class="card-title">Wizyty w dniu: {{ date }}</h5>
 						<div class="card">
 							<div class="card-body">
 								<ul class="list-group list-group-flush">
+									{% if bookedVisits %}
+									{%for i in range(patient|length)%}
+									{%for j in range(patient[i]|length)%}
 									<li class="list-group-item">
-										<b>Pacjent:</b> Dane
-										<b>data:</b> data
+										<b>Pacjent:</b> {{ patient[i][j].name }} {{ patient[i][j].surname }}
+										<b>godzina:</b> {{ bookedVisits[i].startTime }}<br>
 									</li>
+									{%endfor%}
+									{%endfor%}
+									{% else %}
+										<li class="list-group-item">Brak umówionych wizyt</li>
+									{%endif%}
 								</ul>
 							</div>
-							<a href="#" class="btn btn-primary">Zobacz wszystkie</a>
+							<a href="/doctor/visits" class="btn btn-primary">Zobacz wszystkie</a>
 						</div>
 					</div>
 				</div>

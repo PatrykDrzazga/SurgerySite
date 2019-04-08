@@ -33,52 +33,66 @@
 								<ul class="list-group list-group-flush">
 									{% if bookedVisits %}
 										{%for element in bookedVisits%}
-										<li class="list-group-item">
-											<b>Lekarz:</b> {{ doctor[element.doctorId-1].name }} {{ doctor[element.doctorId-1].surname }}
-											<b>data:</b> {{ element.date }} {{ element.startTime }}
-										</li>
-										{%endfor%}
-									{% else %}
-										<li class="list-group-item">Brak umówionych wizyt</li>
-									{% endif %}
-								</ul>
+										{%for i in doctor%}
+										{% if element.doctorId==i.id %}
+											<li class="list-group-item">
+												<b>Lekarz:</b> {{ i.name }} {{ i.surname }}
+												<b>data:</b> {{ element.date }} {{ element.startTime }}
+											</li>
+											{%endif%}
+											{%endfor%}
+											{%endfor%}
+										{% else %}
+											<li class="list-group-item">Brak umówionych wizyt</li>
+										{% endif %}
+									</ul>
+								</div>
+								<a href="/book" class="btn btn-primary">Zarezerwuj wizyte</a>
 							</div>
-							<a href="/book" class="btn btn-primary">Zarezerwuj wizyte</a>
+						</div>
+					</div>
+					<h5 class="card-title">Historia wizyt</h5>
+					<div class="card">
+						<div class="card-body">
+							<ul class="list-group list-group-flush">
+								{% if visitsHistory|length > 2 %}
+									{%for element in range(0,3)%}
+									{%for i in doctor%}
+									{% if visitsHistory[element].doctorId==i.id %}
+										<li class="list-group-item">
+											<b>Lekarz:</b> {{ i.name }} {{ i.surname }}
+											<b>data wizyty:</b> {{ visitsHistory[element].date }}
+											<b>godzina:</b> {{ visitsHistory[element].startTime }}
+											<button class="btn btn-primary btn-sm" type="submit">Szczegóły</button>
+										</li>
+										{%endif%}
+										{%endfor%}
+										{%endfor%}
+									{% endif %}
+									{% if (visitsHistory|length < 3 and visitsHistory|length > 0)  %}
+										{%for element in visitsHistory%}
+										{%for i in doctor%}
+										{% if element.doctorId==i.id %}
+											<li class="list-group-item">
+												<b>Lekarz:</b> {{ i.name }} {{ i.surname }}
+												<b>data wizyty:</b> {{ element.date }}
+												<b>godzina:</b> {{ element.startTime }}
+												<button class="btn btn-primary btn-sm" type="submit">Szczegóły</button>
+											</li>
+											{%endif%}
+											{%endfor%}
+											{%endfor%}
+										{% endif %}
+										{% if visitsHistory|length == 0 %}
+											<li class="list-group-item">Brak umówionych wizyt</li>
+										{% endif %}
+									</ul>
+								</div>
+								<a href="/profile/visits" class="btn btn-light">Zobacz wszystkie</a>
+							</div>
+							<br>
+							<center><a href="/logout" class="btn btn-primary">Wyloguj</a></center>
 						</div>
 					</div>
 				</div>
-				<h5 class="card-title">Historia wizyt</h5>
-				<div class="card">
-					<div class="card-body">
-						<ul class="list-group list-group-flush">
-							{% if visitsHistory|length > 2 %}
-								{%for element in range(0,3)%}
-								<li class="list-group-item">
-									<b>Lekarz:</b> {{ doctor[visitsHistory[element].doctorId-1].name }} {{ doctor[visitsHistory[element].doctorId-1].surname }}
-									<b>data wizyty:</b> {{ visitsHistory[element].date }}
-									<b>godzina:</b> {{ visitsHistory[element].startTime }}
-									<button class="btn btn-primary btn-sm" type="submit">Szczegóły</button>
-								</li>
-								{%endfor%}
-							{% endif %}
-							{% if (visitsHistory|length < 3 and visitsHistory|length > 0)  %}
-								{%for element in visitsHistory%}
-								<li class="list-group-item">
-									<b>Lekarz:</b> {{ doctor[element.doctorId-1].name }} {{ doctor[element.doctorId-1].surname }}
-									<b>data wizyty:</b> {{ element.date }}
-									<b>godzina:</b> {{ element.startTime }}
-									<button class="btn btn-primary btn-sm" type="submit">Szczegóły</button>
-								</li>
-								{%endfor%}
-							{% endif %}
-							{% if visitsHistory|length == 0 %}
-								<li class="list-group-item">Brak umówionych wizyt</li>
-							{% endif %}
-						</ul>
-					</div>
-				</div>
-				<center><a href="/logout" class="btn btn-primary">Wyloguj</a></center>
-			</div>
-		</div>
-	</div>
-{% endblock content %}
+			{% endblock content %}

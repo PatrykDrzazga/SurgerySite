@@ -29,7 +29,7 @@ class User(db.Model, UserMixin):
 class Visit(db.Model):
 	id = db.Column(db.Integer, primary_key=True, nullable=False, unique=True)
 	bookerId = db.Column(db.Integer, db.ForeignKey('user.id'))
-	doctorId = db.Column(db.Integer, db.ForeignKey('doctor.id')) 
+	doctorId = db.Column(db.Integer, nullable=False) 
 	date = db.Column(db.String(20), nullable=False)
 	startTime = db.Column(db.String(20), nullable=False)
 
@@ -38,12 +38,9 @@ class Visit(db.Model):
 
 
 class Doctor(db.Model):
-	id = db.Column(db.Integer, primary_key=True, nullable=False, unique=True)
-	name = db.Column(db.String(25), nullable=False)
-	surname = db.Column(db.String(35), nullable=False)
-	email = db.Column(db.String(120), unique=True, nullable=False)
-	password = db.Column(db.String(60), nullable=False)
-	phoneNumber = db.Column(db.Integer, nullable=False)
+	id = db.Column(db.Integer, primary_key=True)
+	startHour = db.Column(db.Integer, nullable=False)
+	endHour = db.Column(db.Integer, nullable=False)
 
 
 

@@ -7,6 +7,7 @@ from datetime import datetime
 import random, json
 from flask import request, jsonify, session
 import sys
+from sqlalchemy import desc
 
 reservedHoursArray = []
 
@@ -58,15 +59,17 @@ def account():
 	if current_user.isDoctor()==True:
 		return redirect(url_for('doctor'))
 	date = datetime.now().strftime("%Y-%m-%d")
-	bookedVisits = Visit.query.filter(Visit.bookerId==current_user.id, Visit.date > date).all()
+	bookedVisits = Visit.query.filter(Visit.bookerId==current_user.id, Visit.date >= date).all()
 	visitsHistory = Visit.query.filter(Visit.bookerId==current_user.id, Visit.date < date).all()
-	doctor = Doctor.query.filter(Doctor.id==Visit.doctorId).all()
+	doctor = User.query.filter(User.userType=='doctor', User.id==Visit.doctorId).all()
 	return render_template('profile.html', title='Profil pacjenta', bookedVisits=bookedVisits, visitsHistory=visitsHistory, doctor=doctor)
 
 
 @app.route("/book", methods=["GET", "POST"])
 def book():
 	if current_user.is_authenticated==False:
+		return redirect(url_for('home'))
+	if current_user.userType!="user":
 		return redirect(url_for('home'))
 	form = BookingForm()
 	if request.method=='POST':
@@ -125,9 +128,44 @@ def editProfile():
 		flash(u'Dane zostały zaktualizowane!', 'success')
 	return render_template('edit_profile.html', title='Edycja profilu', form=form, data=data)
 
+@app.route("/profile/visits", methods=["GET", "POST"])
+def profileVisits():
+	if current_user.is_authenticated==False:
+		return redirect(url_for('home'))
+	if current_user.userType!="user":
+		return redirect(url_for('home'))
+	date = datetime.now().strftime("%Y-%m-%d")
+	visitsHistory = Visit.query.filter(Visit.bookerId==current_user.id, Visit.date < date).all()
+	doctor = User.query.filter(User.userType=='doctor', User.id==Visit.doctorId).all()
+	return render_template('profilevisits.html', title='Historia wizyt', visitsHistory=visitsHistory, doctor=doctor)
+
 @app.route("/doctor", methods=["GET", "POST"])
 def doctor():
-	return render_template('doctor.html', title='Panel doktora')
+	if current_user.is_authenticated==False:
+		return redirect(url_for('home'))
+	if current_user.userType!="doctor":
+		return redirect(url_for('home'))
+	date = datetime.now().strftime("%Y-%m-%d")
+	patient = []
+	bookedVisits = Visit.query.filter(Visit.doctorId==current_user.id, Visit.date==date).all()
+	for i in bookedVisits:
+		patient.append(User.query.filter(i.bookerId==User.id).all())
+	return render_template('doctor.html', title='Panel doktora', date=date, bookedVisits=bookedVisits, patient=patient)
+
+
+@app.route("/doctor/visits", methods=["GET", "POST"])
+def doctorVisits():
+	if current_user.is_authenticated==False:
+		return redirect(url_for('home'))
+	if current_user.userType!="doctor":
+		return redirect(url_for('home'))
+	patient = []
+	bookedVisits = Visit.query.filter(Visit.doctorId==current_user.id).order_by(desc(Visit.date)).all()
+	for i in bookedVisits:
+		patient.append(User.query.filter(i.bookerId==User.id).all())
+	return render_template('doctorvisits.html', title='Wszystkie wizyty', bookedVisits=bookedVisits, patient=patient)
+
+
 
 
 	
