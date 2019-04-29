@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, IntegerField, SubmitField, SelectField, SelectMultipleField, widgets, DateField
+from wtforms import StringField, PasswordField, IntegerField, SubmitField, SelectField, SelectMultipleField, widgets, DateField, TextAreaField
 from wtforms.validators import DataRequired, Length, Email, EqualTo
 import datetime
 from flaskproject.models import User, Doctor, Visit
@@ -49,5 +49,9 @@ class EditProfileForm(FlaskForm):
 	phoneNumber = IntegerField("Numer telefonu", validators=[DataRequired()])
 	submit = SubmitField("Edytuj dane")
 	
+class VisitForm(FlaskForm):
+	diganosis = TextAreaField("Diagnoza")
+	recommendations = TextAreaField("Zalecenia")
+	submit = SubmitField("Zapisz zmiany")
 	
 

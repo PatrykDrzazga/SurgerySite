@@ -1,6 +1,6 @@
 from flask import render_template, url_for, flash, redirect, request, Response
 from flaskproject import app, bcrypt, db
-from flaskproject.forms import LoginForm, RegistrationForm, BookingForm, EditProfileForm
+from flaskproject.forms import LoginForm, RegistrationForm, BookingForm, EditProfileForm, VisitForm
 from flaskproject.models import User, Visit, Doctor
 from flask_login import login_user, current_user, logout_user, login_required
 from datetime import datetime
@@ -139,6 +139,16 @@ def profileVisits():
 	doctor = User.query.filter(User.userType=='doctor', User.id==Visit.doctorId).all()
 	return render_template('profilevisits.html', title='Historia wizyt', visitsHistory=visitsHistory, doctor=doctor)
 
+@app.route("/profile/visits/<int:id>", methods=["GET", "POST"])
+def profileVisitsDetails(id):
+	if current_user.is_authenticated==False:
+		return redirect(url_for('home'))
+	if current_user.userType!="user":
+		return redirect(url_for('home'))
+	visit = Visit.query.filter(Visit.id==id).all()
+	doctor = User.query.filter(User.id==visit[0].doctorId).all()
+	return render_template('details.html', title='Szczegóły wizyty', visit=visit, doctor=doctor, id=id)
+
 @app.route("/doctor", methods=["GET", "POST"])
 def doctor():
 	if current_user.is_authenticated==False:
@@ -164,6 +174,26 @@ def doctorVisits():
 	for i in bookedVisits:
 		patient.append(User.query.filter(i.bookerId==User.id).all())
 	return render_template('doctorvisits.html', title='Wszystkie wizyty', bookedVisits=bookedVisits, patient=patient)
+
+@app.route("/doctor/visits/<int:id>", methods=["GET", "POST"])
+def doctorVisitsDetails(id):
+	if current_user.is_authenticated==False:
+		return redirect(url_for('home'))
+	if current_user.userType!="doctor":
+		return redirect(url_for('home'))
+	form = VisitForm()
+	visit = Visit.query.filter(Visit.id==id).all()
+	patient = User.query.filter(User.id==visit[0].bookerId).all()
+	form.diganosis.data = visit[0].diganosis
+	form.recommendations.data = visit[0].recommendations
+	if form.validate_on_submit():
+		print(form.diganosis.data)
+		visit[0].diganosis= request.form.get('diganosis')
+		visit[0].recommendations=request.form.get('recommendations')
+		db.session.commit()
+		flash(u'Dane wizyty zostały zaktualizowane pomyślnie!', 'success')
+		return redirect(url_for('doctorVisits'))
+	return render_template('doctorvisitsdetails.html', title='Szczegóły wizyty', visit=visit, patient=patient, id=id, form=form)
 
 
 

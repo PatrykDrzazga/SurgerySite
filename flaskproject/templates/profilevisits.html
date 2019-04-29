@@ -17,7 +17,7 @@
 										<b>Dane lekarza:</b> {{ i.name }} {{ i.surname }}
 										<b>data:</b> {{ element.date }}
 										<b>godzina:</b> {{ element.startTime }}
-										<a href="/doctor/visits/{{ element.id }}" class="btn btn-info btn-sm">Szczegóły</a>
+										<a href="/profile/visits/{{ element.id }}" class="btn btn-info btn-sm">Szczegóły</a>
 									</li>
 									{%endif%}
 									{%endfor%}
@@ -28,7 +28,7 @@
 							</ul>
 						</div>
 					</div>
-					<center><a href="/profile" class="btn btn-secondary">Powrót</a></center>
+					<center><a href="/profile" class="btn btn-outline-secondary">Powrót</a></center>
 				</div>
 			</div>
 		</div>

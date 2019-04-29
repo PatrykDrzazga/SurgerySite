@@ -32,6 +32,9 @@ class Visit(db.Model):
 	doctorId = db.Column(db.Integer, nullable=False) 
 	date = db.Column(db.String(20), nullable=False)
 	startTime = db.Column(db.String(20), nullable=False)
+	diganosis = db.Column(db.String(600), nullable=False, default = 'Brak diagnozy')
+	recommendations = db.Column(db.String(600), nullable=False, default = 'Brak zaleceń')
+
 
 	def __repr__(self):
 		return f"Visit('{self.id}', '{self.date}', '{self.startTime}')"
